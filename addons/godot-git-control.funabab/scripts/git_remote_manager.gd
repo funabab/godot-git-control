@@ -13,14 +13,14 @@ class GitRemoteManager extends Object:
 		pass
 
 	func set_remote_url(remote_name, remote_url, url_type):
-		var remote = self.get_remote(remote_name);
-		if (remote == null):
-			remote = Remote.new(remote_name);
-			self.remotes.push_back(remote);
+		var remote_ = self.get_remote(remote_name);
+		if (remote_ == null):
+			remote_ = Remote.new(remote_name);
+			self.remotes.push_back(remote_);
 		if (url_type == "(fetch)"):
-			remote._set_fetch_url(remote_url);
+			remote_._set_fetch_url(remote_url);
 		elif (url_type == "(push)"):
-			remote._set_push_url(remote_url);
+			remote_._set_push_url(remote_url);
 		pass
 
 	func get_remote(remote_name):
