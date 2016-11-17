@@ -69,11 +69,13 @@ class CommandManager:
 		var os_name = OS.get_name().to_lower();
 		var command_result;
 		if (os_name == "x11"):
-			command_result = self.run_command(["-b", "git"], "whereis");
-			var split = command_result[0].split(":", false);
-			return split[1].strip_edges();
+			command_result = self.run_command(["git"], "which");
+			var split = command_result[0].c_escape().split("\\n", false);
+			return split[0].strip_edges();
 		elif (os_name == "osx"):
-			return self.run_command(["-b", "git"], "whereis")[0].strip_edges();
+			command_result = self.run_command(["git"], "which");
+			var split = command_result[0].c_escape().split("\\n", false);
+			return split[0].strip_edges();
 		elif (os_name == "windows"):
 			return self.run_command(["git"], "where")[0].strip_edges();
 		pass
