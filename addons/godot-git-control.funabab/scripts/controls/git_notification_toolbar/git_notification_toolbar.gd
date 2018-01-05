@@ -22,7 +22,7 @@ const ITEM_REBASE_BRANCH = 13;
 const ITEM_TAG = 15;
 
 func _enter_tree():
-	self.get_popup().connect("item_pressed", self, "_on_item_pressed");
+	self.get_popup().connect("id_pressed", self, "_on_item_pressed");
 	self.git_manager.controller.connect("action_event", self, "_on_action_event");
 	self.branches = PopupMenu.new();
 	self.delete_branches = PopupMenu.new();
@@ -32,8 +32,8 @@ func _enter_tree():
 	self.get_popup().add_child(delete_branches);
 	self.get_popup().set_item_submenu(self.ITEM_CHECKOUT_BRANCH, "branches");
 	self.get_popup().set_item_submenu(self.ITEM_DELETE_BRANCH, "delete_branches");
-	self.branches.connect("item_pressed", self, "_on_branches_item_pressed");
-	self.delete_branches.connect("item_pressed", self, "_on_delete_branches_item_pressed");
+	self.branches.connect("id_pressed", self, "_on_branches_item_pressed");
+	self.delete_branches.connect("id_pressed", self, "_on_delete_branches_item_pressed");
 	pass
 
 func _params(git_manager):

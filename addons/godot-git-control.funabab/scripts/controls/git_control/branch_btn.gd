@@ -9,10 +9,10 @@ var root_control;
 var delete_branch_btn;
 
 func _enter_tree():
-	self.root_control = get_node("..").get_parent();
+	self.root_control = get_node("../../..");
 	self.delete_branch_btn = get_node("../delete_branch_btn");
 	self.connect("item_selected", self, "_on_branch_selected");
-	self.delete_branch_btn.get_popup().connect("item_pressed", self, "_on_delete_branch_btn_item_pressed");
+	self.delete_branch_btn.get_popup().connect("id_pressed", self, "_on_delete_branch_btn_item_pressed");
 	self.root_control.git_manager.controller.connect("action_event", self, "_on_action_event");
 	pass
 

@@ -4,19 +4,22 @@ extends EditorPlugin
 var git_manager;
 var git_control = preload("res://addons/godot-git-control.funabab/controls/git_control.tscn").instance();
 var git_toolbar = preload("res://addons/godot-git-control.funabab/controls/git_notification_toolbar.tscn").instance();
-var settings_manager = SettingsManager.new();
+var settings_manager = SettingsManager.new()
 var plugin_mode;
 var git_control_toolbutton;
 var fatal_error = false;
 
 func _enter_tree():
-	self.git_manager = preload("res://addons/godot-git-control.funabab/scripts/git_manager.gd").GitManager.new(self.get_base_control(), self.settings_manager);
+
+	self.git_manager = preload("res://addons/godot-git-control.funabab/scripts/git_manager.gd").GitManager.new(self.get_editor_interface().get_base_control(), self.settings_manager);
 	if (self.startup_error()):
 		self.fatal_error = true;
 		git_manager.free();
 		git_control.free();
 		return;
 
+	self.git_control._params(self.git_manager)
+	self.git_toolbar._params(self.git_manager)
 	var GitignoreManager = preload("res://addons/godot-git-control.funabab/scripts/gitignore_manager.gd").GitignoreManager;
 	var git_ignore = GitignoreManager.new("res://.gitignore");
 	git_ignore.add_exclusion("addons/godot-git-control.funabab/");
@@ -25,11 +28,9 @@ func _enter_tree():
 	plugin_mode = self.settings_manager.get_value_int("git_control", "mode", 1);
 
 	if (plugin_mode == 1 || plugin_mode == 2):
-		self.git_control._params(self.git_manager);
 		self.git_control_toolbutton = self.add_control_to_bottom_panel(git_control, "Git Control");
 
 	if (plugin_mode == 1 || plugin_mode == 0):
-		self.git_toolbar._params(self.git_manager);
 		self.add_control_to_container(self.CONTAINER_TOOLBAR, self.git_toolbar);
 	self.git_manager._run_refresh();
 	self.git_manager.set_auto_refresh(self.settings_manager.get_value_int("git_control", "auto_refresh_duration", 0));
@@ -50,7 +51,7 @@ func startup_error():
 	pass
 
 func show_fatal_error(msg):
-	var fatal_error_output_mode = settings_manager.get_value_int("git_control", "fatal_error_output_mode", 1);
+	var fatal_error_output_mode = settings_manager.get_value_int("git_control", "fatal_error_output_mode", 2);
 	if (fatal_error_output_mode == 0):
 		return;
 	elif (fatal_error_output_mode == 2):
@@ -61,9 +62,8 @@ func show_fatal_error(msg):
 	accept_dialog.set_title("Git Control");
 	accept_dialog.set_text(msg);
 	accept_dialog.set_exclusive(true);
-	accept_dialog.set_pos(Vector2((self.get_base_control().get_viewport_rect().size.x - accept_dialog.get_rect().size.x) / 2, (self.get_base_control().get_viewport_rect().size.y - accept_dialog.get_rect().size.y) / 2));
-	accept_dialog.show();
-	self.get_base_control().add_child(accept_dialog);
+	accept_dialog.popup_centered();
+	self.get_editor_interface().get_base_control().add_child(accept_dialog);
 	pass
 
 func _exit_tree():

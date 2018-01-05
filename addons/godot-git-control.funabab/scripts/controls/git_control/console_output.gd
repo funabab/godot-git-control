@@ -8,7 +8,7 @@ extends TextEdit
 var root_control;
 
 func _enter_tree():
-	self.root_control = get_node("../../../").get_parent();
+	self.root_control = get_node("../../../..");
 	self.set_readonly(true);
 	self.root_control.git_manager.controller.connect("action_event", self, "_on_action_event");
 	self.root_control.git_manager.connect("cmd_processed", self, "_on_cmd_ok");

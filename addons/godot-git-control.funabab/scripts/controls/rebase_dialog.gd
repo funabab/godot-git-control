@@ -21,8 +21,7 @@ func _params(base_control):
 func _show_dialog(current_branch, branches):
 	get_node("container/current_branch/input").set_text(current_branch);
 	self.update_branch_options(branches);
-	self.set_pos(Vector2((base_control.get_viewport_rect().size.x - self.get_rect().size.x) / 2, (base_control.get_viewport_rect().size.y - self.get_rect().size.y) / 2));
-	self.show();
+	self.popup_centered();
 	pass
 
 func update_branch_options(branches):

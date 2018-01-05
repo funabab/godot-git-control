@@ -35,7 +35,6 @@ class GitRemoteManager extends Object:
 		pass
 
 	func update_remotes(cmd_remote_result):
-		var chunk;
 		var remote_name;
 		var remote_url;
 		var remote_url_type;

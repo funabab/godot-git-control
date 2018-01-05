@@ -21,8 +21,7 @@ func _params(base_control):
 func _show_dialog(files_to_commit):
 	self.files_to_commit = files_to_commit;
 	self.get_node("commit_message/input").set_text("");
-	self.set_pos(Vector2((base_control.get_viewport_rect().size.x - self.get_rect().size.x) / 2, (base_control.get_viewport_rect().size.y - self.get_rect().size.y) / 2));
-	self.show();
+	self.popup_centered()
 	pass
 
 func _on_action_pressed():

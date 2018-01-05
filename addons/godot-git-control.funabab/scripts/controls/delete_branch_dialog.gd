@@ -10,8 +10,8 @@ var base_control;
 signal on_delete_confirmed;
 
 func _enter_tree():
-	self.get_ok().set_text("delete");
-	self.add_button("force delete", true, "_on_force_delete");
+	self.get_ok().set_text("Delete");
+	self.add_button("Force Delete", true, "_on_force_delete");
 	self.connect("confirmed", self, "_on_action_pressed");
 	self.connect("custom_action", self, "_on_action_pressed");
 	pass
@@ -23,8 +23,7 @@ func _params(base_control):
 func _show_dialog(branch_name):
 	self.branch_name = branch_name;
 	get_node("label").set_text("Are you sure to delete Branch '" + branch_name + "'?");
-	self.set_pos(Vector2((self.base_control.get_viewport_rect().size.x - self.get_rect().size.x) / 2, (self.base_control.get_viewport_rect().size.y - self.get_rect().size.y) / 2));
-	self.show();
+	self.popup_centered()
 	pass
 
 func _on_action_pressed(custom_action = null):
