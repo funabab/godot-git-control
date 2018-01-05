@@ -24,8 +24,7 @@ func _show_dialog():
 	get_node("container/tag_commit/input").set_text("");
 	get_node("container/tag_message/input").set_text("");
 	self.hide_errors();
-	self.set_pos(Vector2((base_control.get_viewport_rect().size.x - self.get_rect().size.x) / 2, (base_control.get_viewport_rect().size.y - self.get_rect().size.y) / 2));
-	self.show();
+	self.popup_centered();
 	pass
 
 func validate_inputs():

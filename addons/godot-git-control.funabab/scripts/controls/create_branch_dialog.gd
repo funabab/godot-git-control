@@ -23,8 +23,7 @@ func _show_dialog(current_branch):
 	get_node("container/current_branch/input").set_text(current_branch);
 	get_node("container/new_branch/input").set_text("");
 	self.hide_errors();
-	self.set_pos(Vector2((base_control.get_viewport_rect().size.x - self.get_rect().size.x) / 2, (base_control.get_viewport_rect().size.y - self.get_rect().size.y) / 2));
-	self.show();
+	self.popup_centered();
 	pass
 
 func validate_inputs():

@@ -1,4 +1,3 @@
-
 class GitManager extends Object:
 
 	var base_control;

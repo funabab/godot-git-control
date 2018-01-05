@@ -34,7 +34,7 @@ func _enter_tree():
 	self.rebase_btn = get_node("toolbar_action_btns/rebase_btn");
 	self.merge_btn = get_node("toolbar_action_btns/merge_btn");
 	self.log_btn = get_node("toolbar_action_btns/log_btn");
-	self.clear_btn = get_node("toolbar_action_btns/clear_btn");
+	self.clear_btn = get_node("../workspace/main_container/console_panel/console_title/clear_btn");
 
 	self.refresh_btn.connect("pressed", self, "_on_refresh_btn_pressed");
 	self.branch_btn.connect("pressed", self, "_on_branch_btn_pressed");

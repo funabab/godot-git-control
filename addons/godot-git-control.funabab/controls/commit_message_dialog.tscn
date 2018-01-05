@@ -1,54 +1,73 @@
-[gd_scene load_steps=2 format=1]
+[gd_scene load_steps=2 format=2]
 
 [ext_resource path="res://addons/godot-git-control.funabab/scripts/controls/commit_message_dialog.gd" type="Script" id=1]
 
-[node name="commit_message_dialog" type="ConfirmationDialog"]
+[node name="commit_message_dialog" type="ConfirmationDialog" index="0"]
 
-focus/ignore_mouse = false
-focus/stop_mouse = true
-size_flags/horizontal = 2
-size_flags/vertical = 2
-margin/left = 0.0
-margin/top = 0.0
-margin/right = 549.0
-margin/bottom = 245.0
-popup/exclusive = true
-window/title = "Commit"
-dialog/text = "Commit Message"
-dialog/hide_on_ok = true
-script/script = ExtResource( 1 )
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 609.0
+margin_bottom = 292.0
+rect_min_size = Vector2( 400, 140 )
+rect_pivot_offset = Vector2( 0, 0 )
+mouse_filter = 0
+size_flags_horizontal = 2
+size_flags_vertical = 2
+popup_exclusive = true
+window_title = "Commit"
+resizable = true
+dialog_text = "Commit Message"
+dialog_hide_on_ok = true
+script = ExtResource( 1 )
+_sections_unfolded = [ "Dialog", "Popup" ]
 
-[node name="commit_message" type="VBoxContainer" parent="."]
+[node name="commit_message" type="VBoxContainer" parent="." index="3"]
 
-editor/display_folded = true
-anchor/right = 1
-anchor/bottom = 1
-focus/ignore_mouse = false
-focus/stop_mouse = false
-size_flags/horizontal = 2
-size_flags/vertical = 2
-margin/left = 15.0
-margin/top = 29.0
-margin/right = 15.0
-margin/bottom = 36.0
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 8.0
+margin_top = 22.0
+margin_right = -8.0
+margin_bottom = -36.0
+rect_pivot_offset = Vector2( 0, 0 )
+mouse_filter = 1
+size_flags_horizontal = 3
+size_flags_vertical = 3
 alignment = 0
+_sections_unfolded = [ "Size Flags" ]
 
-[node name="input" type="TextEdit" parent="commit_message"]
+[node name="input" type="TextEdit" parent="commit_message" index="0"]
 
-focus/ignore_mouse = false
-focus/stop_mouse = true
-size_flags/horizontal = 2
-size_flags/vertical = 3
-margin/left = 0.0
-margin/top = 0.0
-margin/right = 519.0
-margin/bottom = 180.0
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 593.0
+margin_bottom = 234.0
+rect_pivot_offset = Vector2( 0, 0 )
+mouse_filter = 0
+size_flags_horizontal = 3
+size_flags_vertical = 3
 custom_colors/current_line_color = Color( 0.172549, 0.164706, 0.196078, 1 )
+text = ""
+readonly = false
+highlight_current_line = false
 syntax_highlighting = false
 show_line_numbers = false
 highlight_all_occurrences = false
-caret/block_caret = false
-caret/caret_blink = false
-caret/caret_blink_speed = 0.65
+override_selected_font_color = false
+context_menu_enabled = true
+smooth_scrolling = false
+v_scroll_speed = 80.0
+hiding_enabled = 0
+caret_block_mode = false
+caret_blink = false
+caret_blink_speed = 0.65
+caret_moving_by_right_click = true
+_sections_unfolded = [ "Caret", "Size Flags" ]
 
 

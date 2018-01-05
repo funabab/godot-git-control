@@ -1,184 +1,237 @@
-[gd_scene load_steps=2 format=1]
+[gd_scene load_steps=2 format=2]
 
 [ext_resource path="res://addons/godot-git-control.funabab/scripts/controls/create_tag_dialog.gd" type="Script" id=1]
 
-[node name="create_tag_dialog" type="ConfirmationDialog"]
+[node name="create_tag_dialog" type="ConfirmationDialog" index="0"]
 
-focus/ignore_mouse = false
-focus/stop_mouse = true
-size_flags/horizontal = 2
-size_flags/vertical = 2
-margin/left = 0.0
-margin/top = 0.0
-margin/right = 527.0
-margin/bottom = 291.0
-popup/exclusive = true
-window/title = "Tag"
-dialog/hide_on_ok = true
-script/script = ExtResource( 1 )
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 527.0
+margin_bottom = 373.0
+rect_min_size = Vector2( 400, 140 )
+rect_pivot_offset = Vector2( 0, 0 )
+mouse_filter = 0
+size_flags_horizontal = 2
+size_flags_vertical = 2
+popup_exclusive = true
+window_title = "Tag"
+resizable = false
+dialog_hide_on_ok = true
+script = ExtResource( 1 )
+_sections_unfolded = [ "Dialog" ]
 
-[node name="container" type="VBoxContainer" parent="."]
+[node name="container" type="VBoxContainer" parent="." index="3"]
 
-anchor/right = 1
-anchor/bottom = 1
-focus/ignore_mouse = false
-focus/stop_mouse = false
-size_flags/horizontal = 2
-size_flags/vertical = 2
-margin/left = 15.0
-margin/top = 20.0
-margin/right = 15.0
-margin/bottom = 36.0
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 8.0
+margin_top = 8.0
+margin_right = -8.0
+margin_bottom = -36.0
+rect_pivot_offset = Vector2( 0, 0 )
+mouse_filter = 1
+size_flags_horizontal = 2
+size_flags_vertical = 2
 custom_constants/separation = 10
 alignment = 0
 
-[node name="tag_name" type="VBoxContainer" parent="container"]
+[node name="tag_name" type="VBoxContainer" parent="container" index="0"]
 
-editor/display_folded = true
-focus/ignore_mouse = false
-focus/stop_mouse = false
-size_flags/horizontal = 2
-size_flags/vertical = 2
-margin/left = 0.0
-margin/top = 0.0
-margin/right = 497.0
-margin/bottom = 42.0
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 511.0
+margin_bottom = 42.0
+rect_pivot_offset = Vector2( 0, 0 )
+mouse_filter = 1
+size_flags_horizontal = 3
+size_flags_vertical = 1
 alignment = 0
+_sections_unfolded = [ "Size Flags" ]
 
-[node name="label" type="Label" parent="container/tag_name"]
+[node name="label" type="Label" parent="container/tag_name" index="0"]
 
-focus/ignore_mouse = true
-focus/stop_mouse = true
-size_flags/horizontal = 2
-size_flags/vertical = 0
-margin/left = 0.0
-margin/top = 0.0
-margin/right = 497.0
-margin/bottom = 14.0
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 61.0
+margin_bottom = 14.0
+rect_pivot_offset = Vector2( 0, 0 )
+mouse_filter = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
 text = "Tag name"
 percent_visible = 1.0
 lines_skipped = 0
 max_lines_visible = -1
+_sections_unfolded = [ "Size Flags" ]
 
-[node name="input" type="LineEdit" parent="container/tag_name"]
+[node name="input" type="LineEdit" parent="container/tag_name" index="1"]
 
-focus/ignore_mouse = false
-focus/stop_mouse = true
-size_flags/horizontal = 2
-size_flags/vertical = 2
-margin/left = 0.0
-margin/top = 18.0
-margin/right = 497.0
-margin/bottom = 42.0
-placeholder/alpha = 0.6
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 18.0
+margin_right = 511.0
+margin_bottom = 42.0
+rect_pivot_offset = Vector2( 0, 0 )
+mouse_filter = 0
+size_flags_horizontal = 3
+size_flags_vertical = 0
 focus_mode = 2
-caret/caret_blink = false
-caret/caret_blink_speed = 0.65
+placeholder_alpha = 0.6
+caret_blink = false
+caret_blink_speed = 0.65
+context_menu_enabled = true
+_sections_unfolded = [ "Size Flags" ]
 
-[node name="error_label" type="Label" parent="container/tag_name"]
+[node name="error_label" type="Label" parent="container/tag_name" index="2"]
 
-visibility/visible = false
-focus/ignore_mouse = true
-focus/stop_mouse = true
-size_flags/horizontal = 2
-size_flags/vertical = 0
-margin/left = 0.0
-margin/top = 46.0
-margin/right = 497.0
-margin/bottom = 60.0
+visible = false
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 46.0
+margin_right = 31.0
+margin_bottom = 60.0
+rect_pivot_offset = Vector2( 0, 0 )
+mouse_filter = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
 custom_colors/font_color = Color( 0.980392, 0.356863, 0.356863, 1 )
 text = "error"
 percent_visible = 1.0
 lines_skipped = 0
 max_lines_visible = -1
+_sections_unfolded = [ "Size Flags" ]
 
-[node name="tag_commit" type="VBoxContainer" parent="container"]
+[node name="tag_commit" type="VBoxContainer" parent="container" index="1"]
 
-focus/ignore_mouse = false
-focus/stop_mouse = false
-size_flags/horizontal = 2
-size_flags/vertical = 2
-margin/left = 0.0
-margin/top = 52.0
-margin/right = 497.0
-margin/bottom = 94.0
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 52.0
+margin_right = 511.0
+margin_bottom = 94.0
+rect_pivot_offset = Vector2( 0, 0 )
+mouse_filter = 1
+size_flags_horizontal = 3
+size_flags_vertical = 1
 alignment = 0
+_sections_unfolded = [ "Size Flags" ]
 
-[node name="label" type="Label" parent="container/tag_commit"]
+[node name="label" type="Label" parent="container/tag_commit" index="0"]
 
-focus/ignore_mouse = true
-focus/stop_mouse = true
-size_flags/horizontal = 2
-size_flags/vertical = 0
-margin/left = 0.0
-margin/top = 0.0
-margin/right = 497.0
-margin/bottom = 14.0
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 72.0
+margin_bottom = 14.0
+rect_pivot_offset = Vector2( 0, 0 )
+mouse_filter = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
 text = "Commit ref"
 percent_visible = 1.0
 lines_skipped = 0
 max_lines_visible = -1
+_sections_unfolded = [ "Size Flags" ]
 
-[node name="input" type="LineEdit" parent="container/tag_commit"]
+[node name="input" type="LineEdit" parent="container/tag_commit" index="1"]
 
-focus/ignore_mouse = false
-focus/stop_mouse = true
-size_flags/horizontal = 2
-size_flags/vertical = 2
-margin/left = 0.0
-margin/top = 18.0
-margin/right = 497.0
-margin/bottom = 42.0
-placeholder/text = "Optional"
-placeholder/alpha = 0.6
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 18.0
+margin_right = 511.0
+margin_bottom = 42.0
+rect_pivot_offset = Vector2( 0, 0 )
+mouse_filter = 0
+size_flags_horizontal = 3
+size_flags_vertical = 0
 focus_mode = 2
-caret/caret_blink = false
-caret/caret_blink_speed = 0.65
+placeholder_text = "Optional"
+placeholder_alpha = 0.6
+caret_blink = false
+caret_blink_speed = 0.65
+context_menu_enabled = true
+_sections_unfolded = [ "Size Flags" ]
 
-[node name="tag_message" type="VBoxContainer" parent="container"]
+[node name="tag_message" type="VBoxContainer" parent="container" index="2"]
 
-editor/display_folded = true
-focus/ignore_mouse = false
-focus/stop_mouse = false
-size_flags/horizontal = 2
-size_flags/vertical = 3
-margin/left = 0.0
-margin/top = 104.0
-margin/right = 497.0
-margin/bottom = 235.0
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 104.0
+margin_right = 511.0
+margin_bottom = 329.0
+rect_pivot_offset = Vector2( 0, 0 )
+mouse_filter = 1
+size_flags_horizontal = 3
+size_flags_vertical = 3
 alignment = 0
+_sections_unfolded = [ "Size Flags" ]
 
-[node name="label" type="Label" parent="container/tag_message"]
+[node name="label" type="Label" parent="container/tag_message" index="0"]
 
-focus/ignore_mouse = true
-focus/stop_mouse = true
-size_flags/horizontal = 2
-size_flags/vertical = 0
-margin/left = 0.0
-margin/top = 0.0
-margin/right = 497.0
-margin/bottom = 14.0
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 81.0
+margin_bottom = 14.0
+rect_pivot_offset = Vector2( 0, 0 )
+mouse_filter = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
 text = "Tag Message"
 percent_visible = 1.0
 lines_skipped = 0
 max_lines_visible = -1
+_sections_unfolded = [ "Size Flags" ]
 
-[node name="input" type="TextEdit" parent="container/tag_message"]
+[node name="input" type="TextEdit" parent="container/tag_message" index="1"]
 
-focus/ignore_mouse = false
-focus/stop_mouse = true
-size_flags/horizontal = 2
-size_flags/vertical = 3
-margin/left = 0.0
-margin/top = 18.0
-margin/right = 497.0
-margin/bottom = 131.0
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 18.0
+margin_right = 511.0
+margin_bottom = 225.0
+rect_min_size = Vector2( 0, 100 )
+rect_pivot_offset = Vector2( 0, 0 )
+mouse_filter = 0
+size_flags_horizontal = 3
+size_flags_vertical = 3
 custom_colors/current_line_color = Color( 0.172549, 0.164706, 0.196078, 1 )
+text = ""
+readonly = false
+highlight_current_line = false
 syntax_highlighting = false
 show_line_numbers = false
 highlight_all_occurrences = false
-caret/block_caret = false
-caret/caret_blink = false
-caret/caret_blink_speed = 0.65
+override_selected_font_color = false
+context_menu_enabled = true
+smooth_scrolling = false
+v_scroll_speed = 80.0
+hiding_enabled = 0
+caret_block_mode = false
+caret_blink = false
+caret_blink_speed = 0.65
+caret_moving_by_right_click = true
+_sections_unfolded = [ "Rect", "Size Flags" ]
 
 

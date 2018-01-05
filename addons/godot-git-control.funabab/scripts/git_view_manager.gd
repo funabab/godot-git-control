@@ -34,15 +34,7 @@ class GitViewManager extends Object:
 		self.revert_confirm_dialog = preload("res://addons/godot-git-control.funabab/controls/revert_confirm_dialog.tscn").instance();
 		self.rebase_dialog = preload("res://addons/godot-git-control.funabab/controls/rebase_dialog.tscn").instance();
 		self.merge_branch_dialog = preload("res://addons/godot-git-control.funabab/controls/merge_branch_dialog.tscn").instance();
-	
-		self.create_branch_dialog._params(self.git_manager.base_control);
-		self.create_tag_dialog._params(self.git_manager.base_control);
-		self.commit_message_dialog._params(self.git_manager.base_control);
-		self.delete_branch_dialog._params(self.git_manager.base_control);
-		self.revert_confirm_dialog._params(self.git_manager.base_control);
-		self.rebase_dialog._params(self.git_manager.base_control);
-		self.merge_branch_dialog._params(self.git_manager.base_control);
-	
+		
 		self.create_branch_dialog.connect("on_create_branch", self, "_on_create_branch");
 		self.create_tag_dialog.connect("on_create_tag", self, "_on_create_tag");
 		self.commit_message_dialog.connect("on_commit", self, "_on_commit");

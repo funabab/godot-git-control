@@ -1,21 +1,20 @@
-[gd_scene load_steps=2 format=1]
+[gd_scene load_steps=1 format=2]
 
 [ext_resource path="res://addons/godot-git-control.funabab/scripts/controls/revert_confirm_dialog.gd" type="Script" id=1]
 
 [node name="revert_confirm_dialog" type="ConfirmationDialog"]
 
-focus/ignore_mouse = false
-focus/stop_mouse = true
-size_flags/horizontal = 2
-size_flags/vertical = 2
-margin/left = 0.0
-margin/top = 0.0
-margin/right = 398.0
-margin/bottom = 84.0
-popup/exclusive = true
-window/title = "Please Confirm..."
-dialog/text = "Reset will erase changes in selected files since last commit\nAre you sure to continue\?"
-dialog/hide_on_ok = true
-script/script = ExtResource( 1 )
-
-
+focus_ignore_mouse = false
+focus_stop_mouse = true
+size_flags_horizontal = 2
+size_flags_vertical = 2
+margin_left = 0.0
+margin_top = 0.0
+margin_right = 398.0
+margin_bottom = 84.0
+popup_exclusive = true
+window_title = "Please Confirm..."
+dialog_text = "Reset will erase changes in selected files since last commit
+Are you sure to continue?"
+dialog_hide_on_ok = true
+script = ExtResource( 1 )

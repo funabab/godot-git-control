@@ -26,7 +26,7 @@ const ITEM_TYPE_CHILD = "item_type_child";
 const ITEM_TYPE_CHILD_EMPTY = "item_type_child_empty";
 
 func _enter_tree():
-	self.root_control = self.get_node("../../../").get_parent();
+	self.root_control = self.get_node("../../..");
 
 	self.create_item();
 	self.set_hide_root(true);
