@@ -1,0 +1,102 @@
+[gd_scene load_steps=2 format=2]
+
+[sub_resource type="GDScript" id=1]
+
+resource_name = "commit_message_dialog"
+script/source = "tool
+extends \"res://addons/godot-git-control.funabab/scripts/git_dialog.gd\"
+
+func _get_ok_btn_text():
+	return Lang.tr(\"prop_btn_text_commit\");
+	pass
+
+func _tr():
+	window_title = Lang.tr(\"prop_window_title_enter_commit_msg\");
+	dialog_text = Lang.tr(\"prop_dialog_text_commit_msg\");
+	pass
+
+func _get_result(custom):
+	return $commit_message/input.text;
+	pass
+
+func _on_show_dialog(args):
+	$commit_message/input.text = \"\";
+	pass
+"
+_sections_unfolded = [ "Resource" ]
+
+[node name="commit_message_dialog" type="AcceptDialog" index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 549.0
+margin_bottom = 245.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+popup_exclusive = true
+window_title = "Enter commit message"
+resizable = false
+dialog_text = "commit message"
+dialog_hide_on_ok = true
+script = SubResource( 1 )
+_sections_unfolded = [ "Dialog", "Popup", "Rect" ]
+
+[node name="commit_message" type="VBoxContainer" parent="." index="3"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 8.0
+margin_top = 22.0
+margin_right = -8.0
+margin_bottom = -36.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 1
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+alignment = 0
+_sections_unfolded = [ "Margin" ]
+
+[node name="input" type="TextEdit" parent="commit_message" index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 533.0
+margin_bottom = 187.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+text = ""
+readonly = false
+highlight_current_line = false
+syntax_highlighting = false
+show_line_numbers = false
+highlight_all_occurrences = false
+override_selected_font_color = false
+context_menu_enabled = true
+smooth_scrolling = false
+v_scroll_speed = 80.0
+hiding_enabled = 0
+wrap_lines = false
+caret_block_mode = false
+caret_blink = false
+caret_blink_speed = 0.65
+caret_moving_by_right_click = true
+_sections_unfolded = [ "Margin", "Size Flags" ]
+
+

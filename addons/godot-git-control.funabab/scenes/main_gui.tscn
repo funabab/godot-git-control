@@ -1,0 +1,1274 @@
+[gd_scene load_steps=12 format=2]
+
+[ext_resource path="res://addons/godot-git-control.funabab/scripts/gui/main_gui.gd" type="Script" id=1]
+[ext_resource path="res://addons/godot-git-control.funabab/scenes/res/octicon_font.tres" type="DynamicFont" id=2]
+[ext_resource path="res://addons/godot-git-control.funabab/scenes/res/workspace_object_font.tres" type="DynamicFont" id=3]
+
+[sub_resource type="GDScript" id=1]
+
+resource_name = "menus"
+script/source = "tool
+extends HBoxContainer
+
+onready var root = $\"../\";
+
+onready var refresh_btn = $branch_toolbar/refresh_btn;
+onready var branches_btn = $branch_toolbar/branches_btn;
+onready var delete_branch_btn = $branch_toolbar/delete_branch_btn;
+onready var commit_btn = $menu_bar/commit_btn;
+onready var diff_btn = $menu_bar/diff_btn;
+onready var revert_btn = $menu_bar/revert_btn;
+onready var tag_btn = $menu_bar/tag_btn;
+onready var rebase_btn = $menu_bar/rebase_btn;
+onready var merge_btn = $menu_bar/merge_btn;
+onready var branch_btn = $menu_bar/branch_btn;
+onready var log_btn = $menu_bar/log_btn;
+onready var settings_btn = $menu_bar/settings_btn;
+onready var gitignore_btn = $menu_bar/gitignore_btn;
+
+func _ready():
+	root.connect(\"action_event\", self, \"_on_action_event\");
+	refresh_btn.connect(\"pressed\", self, \"_on_refresh_btn_pressed\");
+	commit_btn.connect(\"pressed\", self, \"_on_commit_btn_pressed\");
+	diff_btn.connect(\"pressed\", self, \"_on_diff_btn_pressed\");
+	revert_btn.connect(\"pressed\", self, \"_on_revert_btn_pressed\");
+	tag_btn.connect(\"pressed\", self, \"_on_tag_btn_pressed\");
+	rebase_btn.connect(\"pressed\", self, \"_on_rebase_btn_pressed\");
+	merge_btn.connect(\"pressed\", self, \"_on_merge_btn_pressed\");
+	branch_btn.connect(\"pressed\", self, \"_on_branch_btn_pressed\");
+	log_btn.connect(\"pressed\", self, \"_on_log_btn_pressed\");
+	settings_btn.connect(\"pressed\", self, \"_on_settings_btn_pressed\");
+	gitignore_btn.connect(\"pressed\", self, \"_on_gitignore_btn_pressed\");
+	pass
+
+func _on_refresh_btn_pressed():
+	root.git.run_refresh(true, true);
+	pass
+
+func _on_commit_btn_pressed():
+	root.git.call_action(root.git.action.GIT_WORKSPACE_COMMIT_SELECTED_OBJECTS);
+	pass
+
+func _on_diff_btn_pressed():
+	root.git.call_action(root.git.action.GIT_DIFF);
+	pass
+
+func _on_revert_btn_pressed():
+	root.git.call_action(root.git.action.GIT_WORKSPACE_REVERT_SELECTED_OBJECTS);
+	pass
+
+func _on_tag_btn_pressed():
+	root.git.call_action(root.git.action.GIT_CREATE_TAG);
+	pass
+
+func _on_rebase_btn_pressed():
+	root.git.call_action(root.git.action.GIT_REBASE);
+	pass
+
+func _on_merge_btn_pressed():
+	root.git.call_action(root.git.action.GIT_MERGE_BRANCH);
+	pass
+
+func _on_branch_btn_pressed():
+	root.git.call_action(root.git.action.GIT_CREATE_BRANCH);
+	pass
+
+func _on_log_btn_pressed():
+	root.git.run_cmd_log();
+	pass
+
+func _on_settings_btn_pressed():
+	root.git.call_action(root.git.action.GIT_SHOW_SETTINGS);
+	pass
+
+func _on_gitignore_btn_pressed():
+	root.git.call_action(root.git.action.GIT_GITIGNORE_MANAGER);
+	pass
+
+func _on_action_event(what, args):
+	if what == root.git.action.FATAL_ERROR:
+		set_all_btn_state(false);
+	elif what == root.git.action.START_PROCESS:
+		set_all_btn_state(true);
+	pass
+
+func set_all_btn_state(enable):
+	branches_btn.disabled = !enable;
+	delete_branch_btn.disabled = !enable;
+	commit_btn.disabled = !enable;
+	diff_btn.disabled = !enable;
+	revert_btn.disabled = !enable;
+	tag_btn.disabled = !enable;
+	rebase_btn.disabled = !enable;
+	merge_btn.disabled = !enable;
+	branch_btn.disabled = !enable;
+	log_btn.disabled = !enable;
+	gitignore_btn.disabled = !enable;
+	pass"
+_sections_unfolded = [ "Resource" ]
+
+[sub_resource type="GDScript" id=2]
+
+resource_name = "branches_btn"
+script/source = "tool
+extends OptionButton
+
+onready var root = $\"../../../\";
+onready var delete_branch_btn = $\"../delete_branch_btn\";
+
+func _ready():
+	root.connect(\"action_event\", self, \"_on_action_event\");
+	connect(\"item_selected\", self, \"_on_item_selected\");
+	delete_branch_btn.get_popup().connect(\"id_pressed\", self, \"_on_delete_popup_pressed\");
+	pass
+
+func _on_action_event(what, args):
+	if what == root.git.action.UI_BRANCH_UPDATE:
+		update_branch_list(args);
+	elif what == root.git.action.START_PROCESS || what == root.git.action.FATAL_ERROR:
+		clear_all();
+	pass
+
+func _on_item_selected(id):
+	root.git.call_action(root.git.action.GIT_CHECKOUT_BRANCH, id);
+	pass
+
+func _on_delete_popup_pressed(id):
+	root.git.call_action(root.git.action.GIT_DELETE_BRANCH, id);
+	pass
+
+func clear_all():
+	clear();
+	delete_branch_btn.get_popup().clear();
+	pass
+
+func update_branch_list(branches):
+	clear_all();
+	for i in range(branches.size()):
+		delete_branch_btn.get_popup().add_item(branches[i], i);
+		add_item(branches[i], i);
+	set_item_disabled(0, true);
+	delete_branch_btn.get_popup().set_item_disabled(0, true);
+	pass
+"
+_sections_unfolded = [ "Resource" ]
+
+[sub_resource type="GDScript" id=3]
+
+resource_name = "workspace_tree"
+script/source = "
+tool
+extends Tree
+
+const CELL_ICON = 0;
+const CELL_NAME = 1;
+const CELL_CHECKBOX = 2;
+
+var FontAwesome = preload(\"res://addons/godot-git-control.funabab/scripts/utils/font_awesome_codes.gd\");
+var total_objects = 0;
+var selected_objects = 0;
+
+var root_item;
+onready var root = $\"../../../\";
+func _ready():
+	root.connect(\"action_event\", self, \"_on_action_event\");
+	connect(\"cell_selected\", self, \"_on_cell_selected\");
+
+	columns = 3;
+	hide_root = true;
+	select_mode = SELECT_SINGLE;
+	add_font_override(\"font\", load(\"res://addons/godot-git-control.funabab/scenes/res/workspace_object_font.tres\"));
+	set_column_expand(CELL_ICON, false);
+	set_column_min_width(CELL_ICON, 40);
+	set_column_expand(CELL_CHECKBOX, false);
+	set_column_min_width(CELL_CHECKBOX, 25);
+	create_item();
+
+	setup_root_item();
+	pass
+
+func setup_root_item():
+	if root_item:
+		get_root().remove_child(root_item);
+
+	root_item = create_child_item(get_root(),
+	{
+		CELL_ICON: FontAwesome.get(\"hdd-o\"),
+		CELL_NAME: root.git.Lang.tr(\"workspace\")
+	}, false);
+	root_item.disable_folding = true;
+	pass
+
+func create_child_item(parent, val, select = true):
+	var item = create_item(parent);
+	item.set_selectable(CELL_ICON, false);
+	item.set_selectable(CELL_NAME, false);
+
+	item.set_cell_mode(CELL_CHECKBOX, TreeItem.CELL_MODE_CHECK);
+	item.set_checked(CELL_CHECKBOX, select);
+
+	for key in val:
+		item.set_tooltip(key, val[key] if key != CELL_ICON else \" \")
+		item.set_text(key, val[key]);
+		item.set_text_align(key, TreeItem.ALIGN_LEFT);
+	return item;
+	pass
+
+func update_workspace_tree(workspace_objects):
+	total_objects = workspace_objects.size();
+	selected_objects = total_objects;
+	root_item.set_checked(CELL_CHECKBOX, total_objects > 0);
+
+	var idx = 0;
+	for object in workspace_objects:
+		var icons = {
+			object.OBJECT_TYPE_MODIFIED: FontAwesome.get(\"file\"),
+			object.OBJECT_TYPE_DELETED: FontAwesome.get(\"times\"),
+			object.OBJECT_TYPE_CONFLICT: FontAwesome.get(\"exclamation-circle\"),
+			object.OBJECT_TYPE_ADDED: FontAwesome.get(\"plus-circle\")
+		}
+		var item = create_child_item(root_item,
+		{
+			CELL_ICON: icons[object.type] if icons.has(object.type) else FontAwesome.get(\"question-circle\"),
+			CELL_NAME: object.path
+		});
+		item.set_metadata(CELL_CHECKBOX, idx);
+		item.set_checked(CELL_CHECKBOX, true);
+		idx += 1;
+	pass
+
+func clear():
+	setup_root_item();
+	pass
+
+
+func _on_action_event(what, args):
+	if what == root.git.action.UI_WORKSPACE_UPDATE:
+		clear();
+		update_workspace_tree(args);
+	elif what == root.git.action.START_PROCESS || what == root.git.action.FATAL_ERROR:
+		clear();
+	pass
+
+func root_item_check_children(checked):
+	selected_objects = total_objects if checked else 0;
+	var child = root_item.get_children();
+	while(child != null):
+		select_item_object(child, checked);
+		child.set_checked(CELL_CHECKBOX, checked);
+		child = child.get_next();
+	pass
+
+func select_item_object(item, select):
+	var idx = item.get_metadata(CELL_CHECKBOX);
+	root.git.call_action(root.git.action.GIT_WORKSPACE_OBJECT_SELECTION, {idx = idx, select = select});
+	pass
+
+func _on_cell_selected():
+	if total_objects == 0:
+		return;
+
+	var item = get_selected();
+	var checked = !item.is_checked(CELL_CHECKBOX);
+	item.set_checked(CELL_CHECKBOX, checked);
+	item.deselect(CELL_CHECKBOX); # dont if this is the intended way, but this was how i was able to get the toogle effect
+
+	if item == root_item:
+		root_item_check_children(checked);
+	else:
+		selected_objects += 1 if checked else -1;
+		select_item_object(item, checked);
+		root_item.set_checked(CELL_CHECKBOX, selected_objects == total_objects);
+	pass"
+_sections_unfolded = [ "Resource" ]
+
+[sub_resource type="GDScript" id=4]
+
+script/source = "tool
+extends Panel
+
+onready var root = $\"../../../\";
+onready var output_console = $output_console;
+onready var clear_output_btn = $\"../../../menus/menu_bar/clear_output_btn\";
+func _ready():
+	root.connect(\"action_event\", self, \"_on_action_event\");
+	clear_output_btn.connect(\"pressed\", self, \"_on_clear_output_btn_pressed\");
+
+	output_console.bbcode_enabled = true;
+	output_console.connect(\"meta_clicked\", self, \"_on_output_console_meta_clicked\");
+	print_console(\"@funabab (c) 2018\");
+	pass
+
+func _on_output_console_meta_clicked(meta):
+	if typeof(meta) == TYPE_STRING:
+		if meta.begins_with(\"git:\"):
+			root.git.call_action(meta);
+		else:
+			OS.shell_open(meta);
+	pass
+
+func _on_clear_output_btn_pressed():
+	print_console();
+	pass
+
+func print_console(msg = \"\"):
+	msg = \"*** Output Console ***\\n\" + msg;
+	output_console.bbcode_text = msg;
+	pass
+
+func _on_action_event(what, args):
+	if what == root.git.action.UI_WRITE_CONSOLE_OUTPUT:
+		print_console(args);
+	elif what == root.git.action.FATAL_ERROR:
+		print_console();
+	elif what == root.git.action.START_PROCESS:
+		var is_restart = args;
+		if is_restart:
+			print_console();
+	pass"
+_sections_unfolded = [ "Resource" ]
+
+[sub_resource type="GDScript" id=5]
+
+script/source = "tool
+extends PanelContainer
+
+onready var root = $\"../../../\";
+onready var console = $container/commnad_console;
+onready var clear_git_cmd_btn = $container/header/container/options/clear_git_terminal_btn;
+
+func _ready():
+	root.connect(\"action_event\", self, \"_on_action_event\");
+	clear_git_cmd_btn.connect(\"pressed\", self, \"_on_clear_git_cmd_btn_pressed\");
+	pass
+
+func _on_action_event(what, args):
+	if what == root.git.action.UI_WRITE_GIT_TERMINAL:
+		console_write(args);
+	if what == root.git.action.FATAL_ERROR || what == root.git.action.START_PROCESS:
+		console.text = \"\";
+	pass
+
+func _on_clear_git_cmd_btn_pressed():
+	console.text = \"\";
+	pass
+
+func clear_console():
+	console.text = \"\";
+	pass
+
+func console_write(msg = \"\"):
+	console.text += msg;
+	pass"
+_sections_unfolded = [ "Resource" ]
+
+[sub_resource type="Shader" id=6]
+
+code = "shader_type canvas_item;
+
+uniform vec4 background_color:hint_color;
+
+void fragment() {
+	COLOR = background_color;
+}"
+
+[sub_resource type="ShaderMaterial" id=7]
+
+render_priority = 0
+shader = SubResource( 6 )
+shader_param/background_color = Color( 0, 0, 0, 0.320431 )
+_sections_unfolded = [ "shader_param" ]
+
+[sub_resource type="GDScript" id=8]
+
+resource_name = "command_input"
+script/source = "tool
+extends LineEdit
+
+var Utils = preload(\"res://addons/godot-git-control.funabab/scripts/utils/utils.gd\");
+
+onready var root = $\"../../../../../\";
+var history = [];
+var idx = 0;
+
+func _ready():
+	connect(\"text_entered\", self, \"_on_text_entered\");
+	pass
+
+func history_up():
+	if history.empty():
+		return;
+	idx = max(0, idx - 1);
+	text = history[idx];
+	caret_position = text.length();
+	pass
+
+func history_down():
+	var size = history.size();
+	if history.empty() || idx + 1 >= size:
+		idx = size;
+		text = \"\";
+		return;
+	idx = idx + 1;
+	text = history[idx];
+	caret_position = text.length();
+	pass
+
+func _unhandled_input(event):
+	if event is InputEventKey:
+		if event.scancode == KEY_UP:
+			history_up();
+		elif event.scancode == KEY_DOWN:
+			history_down();
+	pass
+
+func handle_cmd(cmd):
+	## TODO: CHANGE hardcoded
+	var size = cmd.size();
+	if size == 1:
+		var c = cmd[0].to_lower();
+		if c == \"clear\" || c == \"cls\":
+#			history.clear();
+			text = \"\";
+			$\"../../\".clear_console();
+			$\"../../../git_output\".print_console();
+			return true;
+	return false;
+	pass
+
+func _on_text_entered(new_text):
+	var t = text.strip_edges();
+	if !t:
+		return;
+	history.append(t);
+	idx = history.size();
+	var cmd = Utils.split_cmd_text(t);
+	if !handle_cmd(cmd):
+		root.git.run_cmd_custom(cmd);
+	text = \"\";
+	pass"
+_sections_unfolded = [ "Resource" ]
+
+[node name="main_gui" type="VBoxContainer" index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 1024.0
+margin_bottom = 600.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 1
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_constants/separation = 5
+alignment = 0
+script = ExtResource( 1 )
+_sections_unfolded = [ "Size Flags", "custom_constants" ]
+
+[node name="menus" type="HBoxContainer" parent="." index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 1024.0
+margin_bottom = 24.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 1
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+custom_constants/separation = 12
+alignment = 0
+script = SubResource( 1 )
+_sections_unfolded = [ "Mouse", "Rect", "custom_constants" ]
+
+[node name="branch_toolbar" type="HBoxContainer" parent="menus" index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 168.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 168, 24 )
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 1
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+alignment = 0
+_sections_unfolded = [ "Rect", "Size Flags", "custom_constants" ]
+
+[node name="refresh_btn" type="Button" parent="menus/branch_toolbar" index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 29.0
+margin_bottom = 24.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+hint_tooltip = "Refresh"
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+custom_fonts/font = ExtResource( 2 )
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+group = null
+text = ""
+flat = false
+align = 1
+_sections_unfolded = [ "Hint", "Rect", "custom_fonts" ]
+
+[node name="branches_btn" type="OptionButton" parent="menus/branch_toolbar" index="1"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 33.0
+margin_right = 135.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 102, 0 )
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+toggle_mode = false
+action_mode = 0
+enabled_focus_mode = 2
+shortcut = null
+group = null
+flat = false
+align = 0
+items = [  ]
+selected = -1
+script = SubResource( 2 )
+_sections_unfolded = [ "Rect", "Size Flags", "custom_fonts" ]
+
+[node name="delete_branch_btn" type="MenuButton" parent="menus/branch_toolbar" index="2"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 139.0
+margin_right = 168.0
+margin_bottom = 24.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+hint_tooltip = "Refresh"
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+custom_fonts/font = ExtResource( 2 )
+toggle_mode = false
+action_mode = 0
+enabled_focus_mode = 0
+shortcut = null
+group = null
+text = ""
+flat = false
+align = 1
+items = [  ]
+_sections_unfolded = [ "Hint", "Rect", "custom_fonts" ]
+
+[node name="menu_bar" type="HBoxContainer" parent="menus" index="1"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 180.0
+margin_right = 1024.0
+margin_bottom = 24.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 1
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+alignment = 0
+_sections_unfolded = [ "Size Flags" ]
+
+[node name="commit_btn" type="Button" parent="menus/menu_bar" index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 85.0
+margin_bottom = 24.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+custom_fonts/font = ExtResource( 2 )
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+group = null
+text = ""
+flat = false
+align = 1
+
+[node name="diff_btn" type="Button" parent="menus/menu_bar" index="1"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 89.0
+margin_right = 174.0
+margin_bottom = 24.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+custom_fonts/font = ExtResource( 2 )
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+group = null
+text = ""
+flat = false
+align = 1
+
+[node name="revert_btn" type="Button" parent="menus/menu_bar" index="2"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 178.0
+margin_right = 263.0
+margin_bottom = 24.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+custom_fonts/font = ExtResource( 2 )
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+group = null
+text = ""
+flat = false
+align = 1
+_sections_unfolded = [ "Rect" ]
+
+[node name="tag_btn" type="Button" parent="menus/menu_bar" index="3"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 267.0
+margin_right = 352.0
+margin_bottom = 24.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+custom_fonts/font = ExtResource( 2 )
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+group = null
+text = ""
+flat = false
+align = 1
+_sections_unfolded = [ "Rect" ]
+
+[node name="rebase_btn" type="Button" parent="menus/menu_bar" index="4"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 356.0
+margin_right = 441.0
+margin_bottom = 24.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+custom_fonts/font = ExtResource( 2 )
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+group = null
+text = ""
+flat = false
+align = 1
+_sections_unfolded = [ "Rect" ]
+
+[node name="merge_btn" type="Button" parent="menus/menu_bar" index="5"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 445.0
+margin_right = 530.0
+margin_bottom = 24.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+custom_fonts/font = ExtResource( 2 )
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+group = null
+text = ""
+flat = false
+align = 1
+_sections_unfolded = [ "Rect" ]
+
+[node name="branch_btn" type="Button" parent="menus/menu_bar" index="6"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 534.0
+margin_right = 619.0
+margin_bottom = 24.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+custom_fonts/font = ExtResource( 2 )
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+group = null
+text = ""
+flat = false
+align = 1
+_sections_unfolded = [ "Rect" ]
+
+[node name="log_btn" type="Button" parent="menus/menu_bar" index="7"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 623.0
+margin_right = 708.0
+margin_bottom = 24.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+custom_fonts/font = ExtResource( 2 )
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+group = null
+text = ""
+flat = false
+align = 1
+_sections_unfolded = [ "Rect" ]
+
+[node name="seperator" type="VSeparator" parent="menus/menu_bar" index="8"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 712.0
+margin_right = 716.0
+margin_bottom = 24.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+
+[node name="gitignore_btn" type="Button" parent="menus/menu_bar" index="9"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 720.0
+margin_right = 732.0
+margin_bottom = 24.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+group = null
+flat = false
+align = 1
+_sections_unfolded = [ "Size Flags" ]
+
+[node name="settings_btn" type="Button" parent="menus/menu_bar" index="10"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 736.0
+margin_right = 748.0
+margin_bottom = 24.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+group = null
+flat = false
+align = 1
+_sections_unfolded = [ "Size Flags" ]
+
+[node name="clear_output_btn" type="Button" parent="menus/menu_bar" index="11"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 752.0
+margin_right = 844.0
+margin_bottom = 24.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+group = null
+text = "clear"
+flat = false
+align = 1
+
+[node name="main" type="HSplitContainer" parent="." index="1"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 29.0
+margin_right = 1024.0
+margin_bottom = 600.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 3
+split_offset = 0
+collapsed = false
+dragger_visibility = 0
+_sections_unfolded = [ "Rect", "Size Flags" ]
+
+[node name="workspace" type="Panel" parent="main" index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 168.0
+margin_bottom = 571.0
+rect_min_size = Vector2( 168, 0 )
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 3
+_sections_unfolded = [ "Rect", "Size Flags" ]
+
+[node name="workspace_tree" type="Tree" parent="main/workspace" index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = true
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/font = ExtResource( 3 )
+columns = 3
+allow_reselect = false
+allow_rmb_select = false
+hide_folding = false
+hide_root = true
+drop_mode_flags = 0
+select_mode = 0
+script = SubResource( 3 )
+_sections_unfolded = [ "Size Flags" ]
+
+[node name="consoles" type="VSplitContainer" parent="main" index="1"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 180.0
+margin_right = 1024.0
+margin_bottom = 571.0
+rect_min_size = Vector2( 300, 0 )
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 3
+split_offset = 0
+collapsed = false
+dragger_visibility = 0
+_sections_unfolded = [ "Rect", "Size Flags" ]
+
+[node name="git_output" type="Panel" parent="main/consoles" index="0"]
+
+editor/display_folded = true
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 844.0
+margin_bottom = 90.0
+rect_min_size = Vector2( 0, 90 )
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+script = SubResource( 4 )
+_sections_unfolded = [ "Rect", "Size Flags" ]
+
+[node name="output_console" type="RichTextLabel" parent="main/consoles/git_output" index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = true
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+bbcode_enabled = true
+bbcode_text = "*** Output Console ***
+@funabab (c) 2018"
+visible_characters = -1
+percent_visible = 1.0
+meta_underlined = true
+tab_size = 4
+text = "*** Output Console ***
+@funabab (c) 2018"
+scroll_active = true
+scroll_following = false
+selection_enabled = false
+override_selected_font_color = false
+_sections_unfolded = [ "BBCode", "Size Flags" ]
+
+[node name="command_terminal" type="PanelContainer" parent="main/consoles" index="1"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 102.0
+margin_right = 844.0
+margin_bottom = 571.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+script = SubResource( 5 )
+_sections_unfolded = [ "Rect", "Size Flags" ]
+
+[node name="container" type="VBoxContainer" parent="main/consoles/command_terminal" index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 7.0
+margin_top = 7.0
+margin_right = 837.0
+margin_bottom = 462.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 1
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_constants/separation = 0
+alignment = 0
+_sections_unfolded = [ "Rect", "Size Flags", "custom_constants" ]
+
+[node name="header" type="Panel" parent="main/consoles/command_terminal/container" index="0"]
+
+material = SubResource( 7 )
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 830.0
+margin_bottom = 35.0
+rect_min_size = Vector2( 0, 35 )
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+_sections_unfolded = [ "Material", "Rect", "Size Flags", "custom_styles" ]
+
+[node name="container" type="HBoxContainer" parent="main/consoles/command_terminal/container/header" index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 11.0
+margin_right = -10.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 1
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+alignment = 0
+_sections_unfolded = [ "Margin", "Size Flags" ]
+
+[node name="title" type="Label" parent="main/consoles/command_terminal/container/header/container" index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 750.0
+margin_bottom = 35.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 2
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+text = "Command output:"
+valign = 1
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+_sections_unfolded = [ "Margin", "Size Flags" ]
+
+[node name="options" type="HBoxContainer" parent="main/consoles/command_terminal/container/header/container" index="1"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 754.0
+margin_right = 809.0
+margin_bottom = 35.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 1
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+alignment = 0
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="link_container" type="CenterContainer" parent="main/consoles/command_terminal/container/header/container/options" index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_bottom = 35.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+use_top_left = false
+
+[node name="launch_terminal_btn" type="LinkButton" parent="main/consoles/command_terminal/container/header/container/options/link_container" index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 10.0
+margin_bottom = 24.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+group = null
+_sections_unfolded = [ "Margin" ]
+
+[node name="seperator" type="VSeparator" parent="main/consoles/command_terminal/container/header/container/options" index="1"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 4.0
+margin_right = 8.0
+margin_bottom = 35.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+
+[node name="clear_git_terminal_btn" type="Button" parent="main/consoles/command_terminal/container/header/container/options" index="2"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 12.0
+margin_right = 55.0
+margin_bottom = 35.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+group = null
+text = "clear"
+flat = true
+align = 1
+
+[node name="commnad_console" type="RichTextLabel" parent="main/consoles/command_terminal/container" index="1"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 35.0
+margin_right = 830.0
+margin_bottom = 431.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = true
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+bbcode_enabled = false
+bbcode_text = ""
+visible_characters = -1
+percent_visible = 1.0
+meta_underlined = true
+tab_size = 4
+text = ""
+scroll_active = true
+scroll_following = false
+selection_enabled = false
+override_selected_font_color = false
+_sections_unfolded = [ "Size Flags" ]
+
+[node name="command_input" type="LineEdit" parent="main/consoles/command_terminal/container" index="2"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 431.0
+margin_right = 830.0
+margin_bottom = 455.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 1
+size_flags_horizontal = 1
+size_flags_vertical = 1
+focus_mode = 2
+context_menu_enabled = true
+placeholder_text = ">>"
+placeholder_alpha = 0.6
+caret_blink = true
+caret_blink_speed = 0.65
+caret_position = 0
+script = SubResource( 8 )
+_sections_unfolded = [ "Caret", "Placeholder" ]
+
+

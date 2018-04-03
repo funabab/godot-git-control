@@ -1,0 +1,291 @@
+[gd_scene load_steps=2 format=2]
+
+[sub_resource type="GDScript" id=1]
+
+resource_name = "create_tag_dialog"
+script/source = "tool
+extends \"res://addons/godot-git-control.funabab/scripts/git_dialog.gd\"
+
+var tag_name_input;
+func _get_ok_btn_text():
+	return Lang.tr(\"prop_btn_text_create_tag\");
+	pass
+
+func _get_custom_btn_text():
+	return Lang.tr(\"prop_btn_text_force_tag\");
+	pass
+
+func _tr():
+	window_title = Lang.tr(\"prop_window_title_create_tag\");
+	$container/tag_name/label.text = Lang.tr(\"prop_label_text_tag_name\");
+	$container/tag_commit/label.text = Lang.tr(\"prop_label_text_commit_ref\");
+	$container/tag_commit/label.text = Lang.tr(\"prop_label_text_tag_commit_msg\");
+	pass
+
+func _get_result(custom):
+	return {
+		tag_name = tag_name_input.text,
+		tag_commit_ref = $container/tag_commit/input.text,
+		tag_message = $container/tag_message/input.text,
+		force = custom == CUSTOM_ACTION
+	}
+	pass
+
+func _on_ready():
+	tag_name_input = $container/tag_name/input;
+	tag_name_input.connect(\"text_changed\", self, \"_on_text_changed\");
+	validation();
+	pass
+
+func _on_show_dialog(args):
+	tag_name_input.text = \"\";
+	$container/tag_message/input.text = \"\";
+	pass
+
+func _on_text_changed(new_text):
+	validation();
+	pass
+
+func validation():
+	var validate = validate_input();
+	get_ok().disabled = !validate;
+	get_custom_btn().disabled = !validate;
+	pass
+
+func validate_input():
+	var tag_name = tag_name_input.text;
+	return tag_name && tag_name.find(\" \") == -1;
+	pass"
+_sections_unfolded = [ "Resource" ]
+
+[node name="create_tag_dialog" type="AcceptDialog" index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 527.0
+margin_bottom = 291.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+popup_exclusive = false
+window_title = ""
+resizable = false
+dialog_hide_on_ok = true
+script = SubResource( 1 )
+_sections_unfolded = [ "Rect" ]
+
+[node name="container" type="VBoxContainer" parent="." index="3"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 8.0
+margin_top = 8.0
+margin_right = -8.0
+margin_bottom = -36.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 1
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+alignment = 0
+_sections_unfolded = [ "Margin" ]
+
+[node name="tag_name" type="VBoxContainer" parent="container" index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 511.0
+margin_bottom = 42.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 1
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+alignment = 0
+
+[node name="label" type="Label" parent="container/tag_name" index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 511.0
+margin_bottom = 14.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 2
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 4
+text = "Tag name"
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="input" type="LineEdit" parent="container/tag_name" index="1"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 18.0
+margin_right = 511.0
+margin_bottom = 42.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 1
+size_flags_horizontal = 1
+size_flags_vertical = 1
+focus_mode = 2
+context_menu_enabled = true
+placeholder_alpha = 0.6
+caret_blink = false
+caret_blink_speed = 0.65
+caret_position = 0
+
+[node name="tag_commit" type="VBoxContainer" parent="container" index="1"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 46.0
+margin_right = 511.0
+margin_bottom = 88.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 1
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+alignment = 0
+
+[node name="label" type="Label" parent="container/tag_commit" index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 511.0
+margin_bottom = 14.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 2
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 4
+text = "Commit ref"
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="input" type="LineEdit" parent="container/tag_commit" index="1"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 18.0
+margin_right = 511.0
+margin_bottom = 42.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 1
+size_flags_horizontal = 1
+size_flags_vertical = 1
+focus_mode = 2
+context_menu_enabled = true
+placeholder_text = "Optional"
+placeholder_alpha = 0.6
+caret_blink = false
+caret_blink_speed = 0.65
+caret_position = 0
+_sections_unfolded = [ "Placeholder" ]
+
+[node name="tag_message" type="VBoxContainer" parent="container" index="2"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 92.0
+margin_right = 511.0
+margin_bottom = 247.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 1
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 3
+alignment = 0
+_sections_unfolded = [ "Size Flags" ]
+
+[node name="label" type="Label" parent="container/tag_message" index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 511.0
+margin_bottom = 14.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 2
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 4
+text = "Tag message"
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="input" type="TextEdit" parent="container/tag_message" index="1"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 18.0
+margin_right = 511.0
+margin_bottom = 155.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 3
+text = ""
+readonly = false
+highlight_current_line = false
+syntax_highlighting = false
+show_line_numbers = false
+highlight_all_occurrences = false
+override_selected_font_color = false
+context_menu_enabled = true
+smooth_scrolling = false
+v_scroll_speed = 80.0
+hiding_enabled = 0
+wrap_lines = false
+caret_block_mode = false
+caret_blink = false
+caret_blink_speed = 0.65
+caret_moving_by_right_click = true
+_sections_unfolded = [ "Size Flags" ]
+
+

@@ -1,56 +1,32 @@
+extends Reference
 
-## Copyright (c) 2016 AA. Funsho
-## funabab@gmail.com
+const FILE = "res://.gitignore";
+const DEFAULT_PATTERNS = [
+	"/.import/*",
+	"/addons/godot-git-control.funabab/*"];
 
-class GitignoreManager extends Object:
+func initialize():
+	var dir = Directory.new();
+	if !dir.file_exists(FILE):
+		save_patterns(DEFAULT_PATTERNS);
+	pass
 
-	var path;
-	var process;
-	var patterns_queue = [];
+func save_patterns(patterns):
+	var file = File.new();
+	file.open(FILE, File.WRITE);
+	for pattern in patterns:
+		file.store_line(pattern);
+	file.close();
+	pass
 
-	func _init(path):
-		self.path = path;
-		self.process = Thread.new();
-		pass
-
-	func add_exclusion(path):
-		if (path.begins_with("!") || path.begins_with("#")):
-			path = "\\" + path;
-		self.patterns_queue.append(path);
-		pass
-
-	func add_inclusion(path):
-		self.patterns_queue.append("!" + path);
-		pass
-
-	func write_all():
-		if (self.patterns_queue.empty() || self.process.is_active()):
-			return;
-		self.process.start(self, "_process_patterns");
-		pass
-
-	func _process_patterns(params = null):
-		var file = File.new();
-		if (file.file_exists(self.path)):
-			file.open(self.path, file.READ_WRITE);
-		else:
-			file.open(self.path, file.WRITE_READ);
-		self.remove_existing_patterns(file);
-		for val in self.patterns_queue:
-			file.store_line(val);
-		file.close();
-		pass
-
-	func remove_existing_patterns(file):
-		var line;
-		file.seek(0);
-		while(!file.eof_reached()):
-			line = file.get_line().strip_edges();
-			for i in range(self.patterns_queue.size()):
-				##just used string similarity, no real reason behind it
-				if line.similarity(self.patterns_queue[i]) == 1:
-					self.patterns_queue.remove(i);
-					break
-		pass
-
-
+func load_patterns():
+	var patterns = [];
+	var file = File.new();
+	file.open(FILE, File.READ);
+	while(!file.eof_reached()):
+		var line = file.get_line().strip_edges();
+		if !line.empty() && !line.begins_with("#"):
+			patterns.append(line);
+	file.close();
+	return patterns;
+	pass

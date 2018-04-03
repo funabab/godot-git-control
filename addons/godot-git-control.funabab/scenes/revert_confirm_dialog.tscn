@@ -1,0 +1,39 @@
+[gd_scene load_steps=2 format=2]
+
+[sub_resource type="GDScript" id=1]
+
+resource_name = "revert_confirm_dialog"
+script/source = "tool
+extends \"res://addons/godot-git-control.funabab/scripts/git_dialog.gd\"
+
+func _get_ok_btn_text():
+	return Lang.tr(\"prop_btn_text_revert_objects\");
+	pass
+
+func _tr():
+	dialog_text = Lang.tr(\"prop_dialog_text_revert_objects\");
+	pass"
+_sections_unfolded = [ "Resource" ]
+
+[node name="revert_confirm_dialog" type="AcceptDialog" index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 398.0
+margin_bottom = 84.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+popup_exclusive = false
+window_title = "Alert!"
+resizable = false
+dialog_hide_on_ok = true
+script = SubResource( 1 )
+_sections_unfolded = [ "Dialog", "Rect" ]
+
+

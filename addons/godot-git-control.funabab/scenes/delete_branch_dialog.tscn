@@ -1,0 +1,53 @@
+[gd_scene load_steps=2 format=2]
+
+[sub_resource type="GDScript" id=1]
+
+resource_name = "delete_branch_dialog"
+script/source = "tool
+extends \"res://addons/godot-git-control.funabab/scripts/git_dialog.gd\"
+
+var selected_branch;
+func _get_ok_btn_text():
+	return Lang.tr(\"prop_btn_text_delete_branch\");
+	pass
+
+func _get_custom_btn_text():
+	return Lang.tr(\"prop_btn_text_force_delete_branch\");
+	pass
+
+func _get_result(custom):
+	return {
+		branch = selected_branch,
+		force = custom == CUSTOM_ACTION
+	}
+	pass
+
+func _on_show_dialog(args):
+	selected_branch = args;
+	dialog_text = Lang.tr(\"confirm_delete_branch\") % selected_branch;
+	pass"
+_sections_unfolded = [ "Resource" ]
+
+[node name="delete_branch_dialog" type="AcceptDialog" index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 444.0
+margin_bottom = 70.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+popup_exclusive = false
+window_title = "Alert!"
+resizable = false
+dialog_text = "Delete branch"
+dialog_hide_on_ok = true
+script = SubResource( 1 )
+_sections_unfolded = [ "Dialog", "Margin", "Rect" ]
+
+

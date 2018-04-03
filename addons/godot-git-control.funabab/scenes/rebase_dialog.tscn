@@ -1,0 +1,204 @@
+[gd_scene load_steps=2 format=2]
+
+[sub_resource type="GDScript" id=1]
+
+resource_name = "rebase_dialog"
+script/source = "tool
+extends \"res://addons/godot-git-control.funabab/scripts/git_dialog.gd\"
+
+var branch_btn;
+var current_branch;
+func _on_ready():
+	branch_btn = $container/rebase_on_branch/branches;
+	current_branch = $container/current_branch/input;
+	pass
+
+func _tr():
+	window_title = Lang.tr(\"prop_window_title_rebase_branch\");
+	$container/current_branch/label.text = Lang.tr(\"prop_label_text_current_branch\");
+	$container/rebase_on_branch/label.text = Lang.tr(\"prop_label_text_rebase_branch\");
+	pass
+
+func _get_ok_btn_text():
+	return Lang.tr(\"prop_btn_text_rebase_branch\");
+	pass
+
+func _get_result(custom):
+	return branch_btn.get_selected_id();
+	pass
+
+func _on_action_event(what, args):
+	if what == manager.git.action.UI_BRANCH_UPDATE:
+		var branches = args;
+
+		branch_btn.clear();
+		current_branch.text = branches[0];
+		for i in range(args.size()):
+			if i > 0:
+				branch_btn.add_item(branches[i], i);
+	pass"
+_sections_unfolded = [ "Resource" ]
+
+[node name="rebase_dialog" type="AcceptDialog" index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 472.0
+margin_bottom = 175.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+popup_exclusive = false
+window_title = "Alert!"
+resizable = false
+dialog_hide_on_ok = true
+script = SubResource( 1 )
+_sections_unfolded = [ "Rect" ]
+
+[node name="container" type="VBoxContainer" parent="." index="3"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 8.0
+margin_top = 8.0
+margin_right = -8.0
+margin_bottom = -36.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 1
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+alignment = 0
+_sections_unfolded = [ "Margin" ]
+
+[node name="current_branch" type="VBoxContainer" parent="container" index="0"]
+
+editor/display_folded = true
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 456.0
+margin_bottom = 42.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 1
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+alignment = 0
+
+[node name="label" type="Label" parent="container/current_branch" index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 456.0
+margin_bottom = 14.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 2
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 4
+text = "Current Branch"
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="input" type="LineEdit" parent="container/current_branch" index="1"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 18.0
+margin_right = 456.0
+margin_bottom = 42.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 1
+size_flags_horizontal = 1
+size_flags_vertical = 1
+editable = false
+focus_mode = 2
+context_menu_enabled = true
+placeholder_alpha = 0.6
+caret_blink = false
+caret_blink_speed = 0.65
+caret_position = 0
+
+[node name="rebase_on_branch" type="VBoxContainer" parent="container" index="1"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 46.0
+margin_right = 456.0
+margin_bottom = 84.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 1
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+alignment = 0
+
+[node name="label" type="Label" parent="container/rebase_on_branch" index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 456.0
+margin_bottom = 14.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 2
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 4
+text = "Rebase on Branch"
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="branches" type="OptionButton" parent="container/rebase_on_branch" index="1"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 18.0
+margin_right = 456.0
+margin_bottom = 38.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+toggle_mode = false
+action_mode = 0
+enabled_focus_mode = 2
+shortcut = null
+group = null
+flat = false
+align = 0
+items = [  ]
+selected = -1
+
+

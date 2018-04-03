@@ -1,0 +1,228 @@
+[gd_scene load_steps=2 format=2]
+
+[sub_resource type="GDScript" id=1]
+
+resource_name = "create_branch_dialog"
+script/source = "tool
+extends \"res://addons/godot-git-control.funabab/scripts/git_dialog.gd\"
+
+var new_branch_input;
+var current_branch;
+var branches = [];
+
+func _get_ok_btn_text():
+	return Lang.tr(\"prop_btn_text_create_branch\");
+	pass
+
+func _get_custom_btn_text():
+	return Lang.tr(\"prop_btn_text_checkout_branch\");
+	pass
+
+func _tr():
+	window_title = Lang.tr(\"prop_window_title_create_branch\");
+	$container/current_branch/label.text = Lang.tr(\"prop_label_text_current_branch\");
+	$container/new_branch/label.text = Lang.tr(\"prop_label_text_new_branch\");
+	pass
+
+func _on_ready():
+	new_branch_input = $container/new_branch/input;
+	new_branch_input.connect(\"text_changed\", self, \"_on_text_changed\");
+	validation();
+	pass
+
+func _on_show_dialog(args):
+	new_branch_input.text = \"\";
+	pass
+
+func _on_text_changed(new_text):
+	validation();
+	pass
+
+func _get_result(custom):
+	return {
+		\"name\": new_branch_input.text,
+		\"checkout_branch\": custom == CUSTOM_ACTION
+	};
+	pass
+
+func _on_action_event(what, args):
+	if what == manager.git.action.UI_BRANCH_UPDATE:
+		branches = args;
+		current_branch = branches[0];
+		$container/current_branch/input.text = current_branch;
+	pass
+
+func validation():
+	var validate = is_input_valid();
+	get_ok().disabled = !validate;
+	get_custom_btn().disabled = !validate;
+	pass
+
+func is_input_valid():
+	var branch_name = new_branch_input.text;
+	return branch_name && !branches.has(branch_name) && branch_name.find(\" \") == -1;
+	return 
+	pass
+"
+_sections_unfolded = [ "Resource" ]
+
+[node name="create_branch_dialog" type="AcceptDialog" index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 549.0
+margin_bottom = 138.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+popup_exclusive = false
+window_title = ""
+resizable = false
+dialog_hide_on_ok = true
+script = SubResource( 1 )
+_sections_unfolded = [ "Rect" ]
+
+[node name="container" type="VBoxContainer" parent="." index="3"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 8.0
+margin_top = 8.0
+margin_right = -8.0
+margin_bottom = -36.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 1
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+custom_constants/separation = 10
+alignment = 0
+_sections_unfolded = [ "Margin", "custom_constants" ]
+
+[node name="current_branch" type="VBoxContainer" parent="container" index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 533.0
+margin_bottom = 42.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 1
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+alignment = 0
+
+[node name="label" type="Label" parent="container/current_branch" index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 533.0
+margin_bottom = 14.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 2
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 4
+text = "Current branch"
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="input" type="LineEdit" parent="container/current_branch" index="1"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 18.0
+margin_right = 533.0
+margin_bottom = 42.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 1
+size_flags_horizontal = 1
+size_flags_vertical = 1
+editable = false
+focus_mode = 2
+context_menu_enabled = true
+placeholder_alpha = 0.6
+caret_blink = false
+caret_blink_speed = 0.65
+caret_position = 0
+
+[node name="new_branch" type="VBoxContainer" parent="container" index="1"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 52.0
+margin_right = 533.0
+margin_bottom = 94.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 1
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+alignment = 0
+
+[node name="label" type="Label" parent="container/new_branch" index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 533.0
+margin_bottom = 14.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 2
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 4
+text = "Branch branch"
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="input" type="LineEdit" parent="container/new_branch" index="1"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 18.0
+margin_right = 533.0
+margin_bottom = 42.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 1
+size_flags_horizontal = 1
+size_flags_vertical = 1
+focus_mode = 2
+context_menu_enabled = true
+placeholder_alpha = 0.6
+caret_blink = false
+caret_blink_speed = 0.65
+caret_position = 0
+
+

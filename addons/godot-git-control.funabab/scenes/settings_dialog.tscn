@@ -1,0 +1,224 @@
+[gd_scene load_steps=2 format=2]
+
+[sub_resource type="GDScript" id=1]
+
+resource_name = "settings_dialog"
+script/source = "tool
+extends \"res://addons/godot-git-control.funabab/scripts/git_dialog.gd\"
+
+var octicon_font = preload(\"res://addons/godot-git-control.funabab/scenes/res/octicon_font.tres\");
+
+var list_container;
+var Settings;
+var settings_update_hash;
+func _on_ready():
+	Settings = manager.git.Settings;
+	list_container = $panel/scroll_container/container;
+	get_close_button().visible = false;
+	set_ui();
+	pass
+
+func _tr():
+	window_title = Lang.tr(\"prop_window_title_title_settings\");
+	pass
+
+func _get_cancel_btn_text():
+	return null;
+	pass
+
+func _get_result(custom):
+	Settings.save_settings();
+	return settings_update_hash != Settings.get_hash();
+	pass
+
+func _on_show_dialog(args):
+	settings_update_hash = Settings.get_hash();
+	var child_count = list_container.get_child_count();
+
+	for i in range(child_count):
+		var input_node = list_container.get_child(i).get_child(0).get_node(\"input\");
+		if !input_node:
+			continue;
+		var default_value = input_node.get_meta(\"default_value\");
+		var modified = false;
+
+		if input_node is LineEdit:
+			input_node.text = Settings.get(input_node.get_meta(\"key\"));
+			modified = default_value != input_node.text;
+		elif input_node is CheckBox:
+			var toggled = Settings.get(input_node.get_meta(\"key\"));
+			input_node.pressed = toggled;
+			modified = default_value != toggled;
+		elif input_node is OptionButton:
+			var select = Settings.get_as_int(input_node.get_meta(\"key\"));
+			input_node.select(select);
+			modified = default_value != select;
+		list_container.get_child(i).get_child(0).get_node(\"reset\").visible = modified;
+	pass
+
+func set_ui():
+	for key in Settings.LAYOUT:
+		var list_item = VBoxContainer.new();
+		var container = HBoxContainer.new();
+		var label = Label.new();
+		label.text = key.capitalize();
+		label.size_flags_horizontal = Control.SIZE_EXPAND_FILL;
+		container.add_child(label);
+
+		var input_node;
+		var default_value;
+		match(typeof(Settings.LAYOUT[key])):
+			TYPE_STRING:
+				input_node = LineEdit.new();
+				default_value = Settings.get_default(key);
+				input_node.size_flags_horizontal = Control.SIZE_EXPAND_FILL;
+				input_node.connect(\"text_changed\", self, \"_on_list_item_val_text_input_changed\", [container]);
+			TYPE_BOOL:
+				input_node = CheckBox.new();
+				input_node.text = manager.git.Lang.tr(\"value_on\");
+				default_value = Settings.get_default(key);
+				input_node.size_flags_horizontal = Control.SIZE_EXPAND_FILL;
+				input_node.connect(\"toggled\", self, \"_on_list_item_val_input_toggled\", [container]);
+			TYPE_ARRAY:
+				input_node = OptionButton.new();
+				default_value = Settings.get_default_as_int(key);
+				input_node.size_flags_horizontal = Control.SIZE_EXPAND_FILL;
+				var id = 0;
+				for arr in Settings.LAYOUT[key]:
+					input_node.add_item(arr, id);
+					id += 1;
+				input_node.connect(\"item_selected\", self, \"_on_list_item_val_option_input_selected\", [container]);
+
+		if input_node:
+			input_node.set_meta(\"key\", key);
+			input_node.set_meta(\"default_value\", default_value);
+			input_node.name = \"input\";
+			container.add_child(input_node);
+
+			var reset_btn = Button.new();
+			reset_btn.connect(\"pressed\", self, \"_on_list_item_reset_btn_pressed\", [container]);
+			reset_btn.name = \"reset\";
+			reset_btn.add_font_override(\"font\", octicon_font);
+			reset_btn.text = \"\\uf051\";
+			container.add_child(reset_btn);
+
+		list_item.add_child(container);
+		list_item.add_child(HSeparator.new());
+		list_container.add_child(list_item);
+	pass
+
+func _on_list_item_val_text_input_changed(new_text, container):
+	var input = container.get_node(\"input\");
+	var default_val = input.get_meta(\"default_value\");
+	var key = input.get_meta(\"key\");
+	Settings.set(key, input.text);
+	container.get_node(\"reset\").visible = default_val != input.text;
+	pass
+
+
+func _on_list_item_val_input_toggled(toggled, container):
+	var input = container.get_node(\"input\");
+	var default_val = input.get_meta(\"default_value\");
+	var key = input.get_meta(\"key\");
+	Settings.set(key, toggled);
+	container.get_node(\"reset\").visible = default_val != toggled;
+	pass
+
+func _on_list_item_val_option_input_selected(id, container):
+	var input = container.get_node(\"input\");
+	var default_val = input.get_meta(\"default_value\");
+	var key = input.get_meta(\"key\");
+	Settings.set(key, input.get_item_text(id));
+	container.get_node(\"reset\").visible = default_val != id;
+	pass
+
+func _on_list_item_reset_btn_pressed(container):
+	var input = container.get_node(\"input\");
+	if input is LineEdit:
+		input.text = input.get_meta(\"default_value\");
+	elif input is CheckBox:
+		input.pressed = input.get_meta(\"default_value\");
+	elif input is OptionButton:
+		input.select(input.get_meta(\"default_value\"));
+	container.get_node(\"reset\").visible = false;
+	pass
+"
+_sections_unfolded = [ "Resource" ]
+
+[node name="settings_dialog" type="AcceptDialog" index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 549.0
+margin_bottom = 245.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+popup_exclusive = false
+window_title = ""
+resizable = false
+dialog_hide_on_ok = true
+script = SubResource( 1 )
+_sections_unfolded = [ "Rect" ]
+
+[node name="panel" type="Panel" parent="." index="3"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 8.0
+margin_top = 8.0
+margin_right = -8.0
+margin_bottom = -36.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+_sections_unfolded = [ "Margin" ]
+
+[node name="scroll_container" type="ScrollContainer" parent="panel" index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 10.0
+margin_right = -10.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = true
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+scroll_horizontal_enabled = true
+scroll_horizontal = 0
+scroll_vertical_enabled = true
+scroll_vertical = 0
+_sections_unfolded = [ "Margin" ]
+
+[node name="container" type="VBoxContainer" parent="panel/scroll_container" index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 513.0
+margin_bottom = 201.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 1
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+alignment = 0
+_sections_unfolded = [ "Size Flags" ]
+
+
