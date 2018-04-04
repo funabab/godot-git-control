@@ -153,6 +153,10 @@ func _on_action_event(what, args):
 		popup.set_item_disabled(get_item_idx(ITEM_REVERT_ALL), empty_workspace);
 	elif what == git.action.UI_TERMINAL_NOT_FOUND:
 		get_popup().set_item_disabled(get_item_idx(ITEM_LAUNCH_TERMINAL), true);
+	elif what == git.action.FATAL_ERROR:
+		visible = false;
+	elif what == git.action.START_PROCESS:
+		visible = true;
 	pass
 
 func get_item_idx(id):
