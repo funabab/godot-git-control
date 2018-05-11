@@ -37,8 +37,7 @@ func _ready():
 		btn.hint_tooltip = git.Lang.tr("node_tooltip_" + btn.name);
 
 	launch_terminal_btn.connect("pressed", self, "_on_launch_terminal_btn_pressed");
-	pass
-
+	
 func _on_launch_terminal_btn_pressed():
 	git.call_action(git.action.SHOW_TERMINAL);
 	pass
