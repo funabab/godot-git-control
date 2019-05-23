@@ -198,7 +198,7 @@ const Icons = {
 	"zap": "\u26A1"
 }
 
-static func get(key):
+static func gett(key):
 	if Icons.has(key):
 		return Icons[key];
 	return "";

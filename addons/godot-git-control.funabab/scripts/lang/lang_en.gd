@@ -78,6 +78,6 @@ const LANG = {
 	"item_settings": "Settings",
 }
 
-static func tr(key):
+static func trr(key):
 	return LANG[key] if LANG.has(key) else "";
 	pass

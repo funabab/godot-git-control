@@ -1,0 +1,14 @@
+[gd_resource type="DynamicFont" load_steps=3 format=2]
+
+[ext_resource path="res://addons/godot-git-control.funabab/fonts/arial.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://addons/godot-git-control.funabab/fonts/font_awesome.otf" type="DynamicFontData" id=2]
+
+[resource]
+
+size = 14
+use_mipmaps = false
+use_filter = false
+font_data = ExtResource( 2 )
+fallback/0 = ExtResource( 1 )
+_sections_unfolded = [ "Font", "Font/fallback", "Settings" ]
+

@@ -50,7 +50,7 @@ func _on_dialog_confirmed(dialog, args = null):
 	elif dialog == VIEW_SETTINGS:
 		var modified = args;
 		if modified:
-			git.print_output(git.Lang.tr("reload_to_commit_changes"));
+			git.print_output(git.Lang.trr("reload_to_commit_changes"));
 	pass
 
 func _on_action_event(what, args):

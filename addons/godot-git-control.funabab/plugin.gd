@@ -16,12 +16,10 @@ var plugin_mode = 0;
 
 func _enter_tree():
 	Settings = load("res://addons/godot-git-control.funabab/scripts/settings.gd").new();
-	Lang = load_lang(Settings.get("language"));
+	Lang = load_lang(Settings.gett("language"));
 	Git = load("res://addons/godot-git-control.funabab/scripts/git.gd").new(get_editor_interface().get_base_control(), Settings, Lang);
 
-	adapt_font_size_to_dpi()
 	plugin_mode = Settings.get_as_int("plugin_mode");
-	
 	if plugin_mode == PluginMode.DEFAULT || plugin_mode == PluginMode.BOTTOM_DOCK:
 		control = load("res://addons/godot-git-control.funabab/scenes/main_gui.tscn").instance();
 		control.setup(Git);
@@ -59,11 +57,3 @@ func _exit_tree():
 	toolbtn = null;
 	Git.kill_process();
 	pass
-	
-func adapt_font_size_to_dpi():
-	var f_size = get_editor_interface().get_base_control().theme.default_font.get_height()
-	
-	var f_awsome = load("res://addons/godot-git-control.funabab/scenes/res/font_awesome_font.tres")
-	var f_octicon = load("res://addons/godot-git-control.funabab/scenes/res/octicon_font.tres")
-	f_awsome.size = f_size
-	f_octicon.size = f_size

@@ -21,36 +21,36 @@ const ITEM_LAUNCH_TERMINAL = 13;
 
 onready var items_cat = [
 	{
-		ITEM_REFRESH: Lang.tr("item_refresh")
+		ITEM_REFRESH: Lang.trr("item_refresh")
 	},
 
 	{
-		ITEM_CHECKOUT_BRANCH: Lang.tr("item_checkout_branch"),
-		ITEM_DELETE_BRANCH: Lang.tr("item_delete_branch")
+		ITEM_CHECKOUT_BRANCH: Lang.trr("item_checkout_branch"),
+		ITEM_DELETE_BRANCH: Lang.trr("item_delete_branch")
 	},
 
 	{
-		ITEM_COMMIT_ALL: Lang.tr("item_commit_all"),
-		ITEM_REVERT_ALL: Lang.tr("item_revert_all"),
+		ITEM_COMMIT_ALL: Lang.trr("item_commit_all"),
+		ITEM_REVERT_ALL: Lang.trr("item_revert_all"),
 	},
 
 	{
-		ITEM_CREATE_BRANCH: Lang.tr("item_create_branch"),
-		ITEM_MERGE_BRANCH: Lang.tr("item_merge_branch"),
-		ITEM_REBASE_BRANCH: Lang.tr("item_rebase_branch")
+		ITEM_CREATE_BRANCH: Lang.trr("item_create_branch"),
+		ITEM_MERGE_BRANCH: Lang.trr("item_merge_branch"),
+		ITEM_REBASE_BRANCH: Lang.trr("item_rebase_branch")
 	},
 
 	{
-		ITEM_TAG: Lang.tr("item_tag")
+		ITEM_TAG: Lang.trr("item_tag")
 	},
 
 	{
-		ITEM_GITIGNORE_MANAGER: Lang.tr("item_gititnore_manager"),
-		ITEM_SETTINGS: Lang.tr("item_settings")
+		ITEM_GITIGNORE_MANAGER: Lang.trr("item_gititnore_manager"),
+		ITEM_SETTINGS: Lang.trr("item_settings")
 	},
 
 	{
-		ITEM_LAUNCH_TERMINAL: Lang.tr("node_text_launch_terminal_btn")
+		ITEM_LAUNCH_TERMINAL: Lang.trr("node_text_launch_terminal_btn")
 	}
 ]
 

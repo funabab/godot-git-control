@@ -31,13 +31,14 @@ func _ready():
 				btn.text = icon.code;
 				btn.add_font_override("font", IconsManager._get_font(icon.type));
 		else:
-			var text = git.Lang.tr("node_text_" + btn.name);
+			var text = git.Lang.trr("node_text_" + btn.name);
 			if text:
 				btn.text = text;
-		btn.hint_tooltip = git.Lang.tr("node_tooltip_" + btn.name);
+		btn.hint_tooltip = git.Lang.trr("node_tooltip_" + btn.name);
 
 	launch_terminal_btn.connect("pressed", self, "_on_launch_terminal_btn_pressed");
-	
+	pass
+
 func _on_launch_terminal_btn_pressed():
 	git.call_action(git.action.SHOW_TERMINAL);
 	pass

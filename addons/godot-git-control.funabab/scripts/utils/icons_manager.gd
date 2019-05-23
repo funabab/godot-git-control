@@ -36,7 +36,7 @@ static func _get_icon(name):
 	var icon_name = name.right(split + 1);
 
 	if types.has(icon_type):
-		var code = types[icon_type].get(icon_name);
+		var code = types[icon_type].gett(icon_name);
 		if !code.empty():
 			return {
 				"type": icon_type,
