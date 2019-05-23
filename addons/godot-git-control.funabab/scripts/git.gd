@@ -47,7 +47,7 @@ func _init(base_control, settings, lang):
 
 func initialize():
 	set_git_path();
-	git_path = Settings.get("git_path");
+	git_path = Settings.gett("git_path");
 	terminal_path = get_terminal_path();
 	if !terminal_path:
 		call_action(action.UI_TERMINAL_NOT_FOUND);
@@ -75,7 +75,7 @@ func set_auto_commit():
 		return;
 
 #	call_action(action.GIT_AUTO_COMMIT_ACTIVATED);
-	print_output(Lang.tr("auto_commit_active"));
+	print_output(Lang.trr("auto_commit_active"));
 	timer_auto_commit = Timer.new();
 	timer_auto_commit.wait_time = duration;
 	timer_auto_commit.one_shot = false;
@@ -102,17 +102,17 @@ func check_fatal_error():
 	var error = false;
 	if !git_path:
 		call_action(action.FATAL_ERROR);
-		print_output(Lang.tr("git_not_found"));
+		print_output(Lang.trr("git_not_found"));
 		error = true;
 
 	elif !is_git_path_valid():
 		call_action(action.FATAL_ERROR);
-		print_output(Lang.tr("git_path_not_valid"));
+		print_output(Lang.trr("git_path_not_valid"));
 		error = true;
 
 	elif !is_git_initialized():
 		call_action(action.FATAL_ERROR);
-		print_output(Lang.tr("git_not_initialized") % action.get_action_as_text(action.GIT_INITIALIZE));
+		print_output(Lang.trr("git_not_initialized") % action.get_action_as_text(action.GIT_INITIALIZE));
 		error = true;
 	if error:
 		stop_timers();
@@ -122,7 +122,7 @@ func check_fatal_error():
 func start(is_started = false):
 	if check_fatal_error():
 		return;
-	if Settings.get("create_gitignore_file"):
+	if Settings.gett("create_gitignore_file"):
 		GitignoreManager.initialize();
 	var is_restart = !is_started;
 	call_action(action.START_PROCESS, is_restart);
@@ -168,14 +168,14 @@ func handle_action(what, args):
 			if cl_branch.get_branches_count() > 1:
 				dialog.show(dialog.VIEW_MERGE_BRANCH);
 			else:
-				print_output(Lang.tr("no_branch_to_merge"));
+				print_output(Lang.trr("no_branch_to_merge"));
 			return true;
 
 		action.GIT_REBASE:
 			if cl_branch.get_branches_count() > 1:
 				dialog.show(dialog.VIEW_REBASE);
 			else:
-				print_output(Lang.tr("no_branch_to_rebase"));
+				print_output(Lang.trr("no_branch_to_rebase"));
 			return true;
 
 		action.GIT_CREATE_TAG:
@@ -198,14 +198,14 @@ func handle_action(what, args):
 			if cl_workspace.get_all_selected_object_path().size() > 0:
 				dialog.show(dialog.VIEW_COMMIT_MSG);
 			else:
-				print_output(Lang.tr("nothing_object_seleted_to_commit"));
+				print_output(Lang.trr("nothing_object_seleted_to_commit"));
 			return true;
 
 		action.GIT_WORKSPACE_REVERT_SELECTED_OBJECTS:
 			if cl_workspace.get_all_selected_object_path().size() > 0:
 				dialog.show(dialog.VIEW_REVERT_WORKSPACE);
 			else:
-				print_output(Lang.tr("nothing_object_seleted_to_revert"));
+				print_output(Lang.trr("nothing_object_seleted_to_revert"));
 			return true;
 
 		action.SHOW_TERMINAL:
@@ -230,7 +230,7 @@ func run_cmd_custom(custom_cmd):
 	if custom_cmd[0] == "git":
 		custom_cmd.remove(0);
 	else:
-		print_output(Lang.tr("not_a_git_command"));
+		print_output(Lang.trr("not_a_git_command"));
 		return;
 
 	var cmd = CMD.new(CMD.CUSTOM);
@@ -259,7 +259,7 @@ func run_auto_commit():
 		return;
 	var d = OS.get_datetime();
 	var datetime = "%02d/%02d/%d %02d:%02d:%02d" % [d.day, d.month, d.year, d.hour, d.minute, d.second];
-	run_cmd_commit(cl_workspace.get_all_selected_object_path(), Lang.tr("auto_commit_at") % datetime);
+	run_cmd_commit(cl_workspace.get_all_selected_object_path(), Lang.trr("auto_commit_at") % datetime);
 	pass
 
 func run_cmd_branch(show_in_console = false):
@@ -417,10 +417,10 @@ func run_on_cmd_ok(cmd):
 	pass
 
 func set_git_path():
-	if Settings.get("git_path").empty():
+	if Settings.gett("git_path").empty():
 		var path = find_git_path();
 		if path:
-			print_output(Lang.tr("git_found") % path);
+			print_output(Lang.trr("git_found") % path);
 			Settings.set("git_path", path);
 			Settings.save_settings();
 	pass

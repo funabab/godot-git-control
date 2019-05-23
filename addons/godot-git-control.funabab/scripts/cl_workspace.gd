@@ -53,7 +53,7 @@ func _on_cmd_ok(cmd):
 	if cmd.type == cmd.GIT_STATUS:
 		update_workspace_files(cmd.results);
 		if objects.empty() && cmd.show_cmd_in_terminal: # do this when cmd is not a silent one i.e cmd not shown in console
-			git.print_output(git.Lang.tr("workspace_empty"));
+			git.print_output(git.Lang.trr("workspace_empty"));
 	elif cmd.type == cmd.GIT_CHECKOUT || cmd.type == cmd.GIT_INIT || cmd.type == cmd.GIT_COMMIT:
 		## required in other for re updating of control titles to work properly
 		clear();

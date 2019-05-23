@@ -1,7 +1,6 @@
 [gd_scene load_steps=2 format=2]
 
 [sub_resource type="GDScript" id=1]
-
 resource_name = "settings_dialog"
 script/source = "tool
 extends \"res://addons/godot-git-control.funabab/scripts/git_dialog.gd\"
@@ -19,7 +18,7 @@ func _on_ready():
 	pass
 
 func _tr():
-	window_title = Lang.tr(\"prop_window_title_title_settings\");
+	window_title = Lang.trr(\"prop_window_title_title_settings\");
 	pass
 
 func _get_cancel_btn_text():
@@ -43,10 +42,10 @@ func _on_show_dialog(args):
 		var modified = false;
 
 		if input_node is LineEdit:
-			input_node.text = Settings.get(input_node.get_meta(\"key\"));
+			input_node.text = Settings.gett(input_node.get_meta(\"key\"));
 			modified = default_value != input_node.text;
 		elif input_node is CheckBox:
-			var toggled = Settings.get(input_node.get_meta(\"key\"));
+			var toggled = Settings.gett(input_node.get_meta(\"key\"));
 			input_node.pressed = toggled;
 			modified = default_value != toggled;
 		elif input_node is OptionButton:
@@ -75,7 +74,7 @@ func set_ui():
 				input_node.connect(\"text_changed\", self, \"_on_list_item_val_text_input_changed\", [container]);
 			TYPE_BOOL:
 				input_node = CheckBox.new();
-				input_node.text = manager.git.Lang.tr(\"value_on\");
+				input_node.text = manager.git.Lang.trr(\"value_on\");
 				default_value = Settings.get_default(key);
 				input_node.size_flags_horizontal = Control.SIZE_EXPAND_FILL;
 				input_node.connect(\"toggled\", self, \"_on_list_item_val_input_toggled\", [container]);
@@ -143,82 +142,29 @@ func _on_list_item_reset_btn_pressed(container):
 	container.get_node(\"reset\").visible = false;
 	pass
 "
-_sections_unfolded = [ "Resource" ]
 
-[node name="settings_dialog" type="AcceptDialog" index="0"]
-
-anchor_left = 0.0
-anchor_top = 0.0
-anchor_right = 0.0
-anchor_bottom = 0.0
+[node name="settings_dialog" type="AcceptDialog"]
 margin_right = 549.0
 margin_bottom = 245.0
-rect_pivot_offset = Vector2( 0, 0 )
-rect_clip_content = false
-mouse_filter = 0
-mouse_default_cursor_shape = 0
-size_flags_horizontal = 1
-size_flags_vertical = 1
-popup_exclusive = false
 window_title = ""
-resizable = false
-dialog_hide_on_ok = true
 script = SubResource( 1 )
-_sections_unfolded = [ "Rect" ]
 
-[node name="panel" type="Panel" parent="." index="3"]
-
-anchor_left = 0.0
-anchor_top = 0.0
+[node name="panel" type="Panel" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 8.0
 margin_top = 8.0
 margin_right = -8.0
 margin_bottom = -36.0
-rect_pivot_offset = Vector2( 0, 0 )
-rect_clip_content = false
-mouse_filter = 0
-mouse_default_cursor_shape = 0
-size_flags_horizontal = 1
-size_flags_vertical = 1
-_sections_unfolded = [ "Margin" ]
 
-[node name="scroll_container" type="ScrollContainer" parent="panel" index="0"]
-
-anchor_left = 0.0
-anchor_top = 0.0
+[node name="scroll_container" type="ScrollContainer" parent="panel"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 10.0
 margin_right = -10.0
-rect_pivot_offset = Vector2( 0, 0 )
-rect_clip_content = true
-mouse_filter = 0
-mouse_default_cursor_shape = 0
-size_flags_horizontal = 1
-size_flags_vertical = 1
-scroll_horizontal_enabled = true
-scroll_horizontal = 0
-scroll_vertical_enabled = true
-scroll_vertical = 0
-_sections_unfolded = [ "Margin" ]
 
-[node name="container" type="VBoxContainer" parent="panel/scroll_container" index="0"]
-
-anchor_left = 0.0
-anchor_top = 0.0
-anchor_right = 0.0
-anchor_bottom = 0.0
+[node name="container" type="VBoxContainer" parent="panel/scroll_container"]
 margin_right = 513.0
 margin_bottom = 201.0
-rect_pivot_offset = Vector2( 0, 0 )
-rect_clip_content = false
-mouse_filter = 1
-mouse_default_cursor_shape = 0
 size_flags_horizontal = 3
 size_flags_vertical = 3
-alignment = 0
-_sections_unfolded = [ "Size Flags" ]
-
-

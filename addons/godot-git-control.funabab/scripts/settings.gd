@@ -89,6 +89,6 @@ func get_as_int(key):
 	return int(data);
 	pass
 
-func get(key):
+func gett(key):
 	return data[key];
 	pass
